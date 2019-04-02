@@ -37,7 +37,7 @@ macro_rules! bitfield {
             fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
                 writeln!(f, "{}:", stringify!($base)).unwrap();
                 $(
-                writeln!(f, "{}: {}", stringify!($thing),
+                writeln!(f, "    {}: 0x{:x?}", stringify!($thing),
                          self.$thing()).unwrap();
                 )+
                 Ok(())
@@ -86,7 +86,7 @@ macro_rules! bitfield128 {
             fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
                 writeln!(f, "{}:", stringify!($base)).unwrap();
                 $(
-                writeln!(f, "{}: {}", stringify!($thing),
+                writeln!(f, "    {}: 0x{:x?}", stringify!($thing),
                          self.$thing()).unwrap();
                 )+
                 Ok(())

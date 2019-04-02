@@ -49,7 +49,7 @@ pub fn dump_regs(vp: &VirtualProcessor) {
     let mut idx = 0;
     println!("Regs:");
     for v in reg_names.iter() {
-        unsafe { println!("{:?} = {}", v, reg_values[idx].Reg64); }
+        unsafe { println!("{:?} = 0x{:x?}", v, reg_values[idx].Reg64); }
         idx += 1;
     }
     println!("");
@@ -118,7 +118,7 @@ pub fn dump_control_regs(vp: &VirtualProcessor) {
     let mut idx = 0;
     println!("Control regs:");
     for v in reg_names.iter() {
-        unsafe { println!("{:?} = {}", v, reg_values[idx].Reg64); }
+        unsafe { println!("{:?} = 0x{:x?}", v, reg_values[idx].Reg64); }
         idx += 1;
     }
     println!("");
@@ -148,7 +148,7 @@ pub fn dump_msr_regs(vp: &VirtualProcessor) {
     let mut idx = 0;
     println!("Msr regs:");
     for v in reg_names.iter() {
-        unsafe { println!("{:?} = {}", v, reg_values[idx].Reg64); }
+        unsafe { println!("{:?} = 0x{:x?}", v, reg_values[idx].Reg64); }
         idx += 1;
     }
     println!("");
