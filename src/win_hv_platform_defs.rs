@@ -16,6 +16,7 @@
 #![allow(non_camel_case_types)]
 #![allow(non_upper_case_globals)]
 
+use std::fmt;
 use std::ops::{BitAnd, BitAndAssign, BitOrAssign, Shl, Shr};
 
 use common::*;
@@ -641,6 +642,17 @@ pub struct WHV_X64_TABLE_REGISTER {
     pub Base: UINT64,
 }
 
+impl fmt::Display for WHV_X64_TABLE_REGISTER {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        writeln!(f, "WHV_X64_TABLE_REGISTER:");
+        writeln!(f, "Pad: {:?}", self.Pad);
+        writeln!(f, "Limit: {}", self.Limit);
+        writeln!(f, "Base: {}", self.Base);
+        Ok(())
+    }
+}
+
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Default)]
 #[allow(non_snake_case)]
 #[repr(C)]
@@ -887,6 +899,16 @@ pub struct WHV_UINT128 {
     // UINT32  Dword[4];
 }
 
+impl fmt::Display for WHV_UINT128 {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        writeln!(f, "WHV_UINT128:");
+        writeln!(f, "Low64: {}", self.Low64);
+        writeln!(f, "High64: {}", self.High64);
+        Ok(())
+    }
+}
+
+
 impl Shl<usize> for WHV_UINT128 {
     type Output = Self;
 
@@ -1002,7 +1024,7 @@ pub struct WHV_X64_PENDING_EXCEPTION_EVENT {
     pub AsUINT128: WHV_UINT128,
 }
 
-bitfield!(WHV_X64_PENDING_EXCEPTION_EVENT AsUINT128: WHV_UINT128 [
+bitfield128!(WHV_X64_PENDING_EXCEPTION_EVENT AsUINT128: UINT64 [
         EventPending set_EventPending[0..1],
         // Must be WHvX64PendingEventException
         EventType set_EventType[1..4],
@@ -1022,7 +1044,7 @@ pub struct WHV_X64_PENDING_EXT_INT_EVENT {
     pub AsUINT128: WHV_UINT128,
 }
 
-bitfield!(WHV_X64_PENDING_EXT_INT_EVENT AsUINT128: WHV_UINT128 [
+bitfield128!(WHV_X64_PENDING_EXT_INT_EVENT AsUINT128: UINT64 [
     EventPending set_EventPending[0..1],
     EventType set_EventType[1..4],
     Reserved0 set_Reserved0[4..8],
