@@ -199,3 +199,42 @@ pub fn dump_interrupt_regs(vp: &VirtualProcessor) {
                       reg_values[idx].Reg128); }
     println!("");
 }
+
+pub fn dump_cpu_counters(vp: &VirtualProcessor) {
+    dump_apic_counters(vp);
+    dump_cpu_runtime_counters(vp);
+    dump_cpu_intercept_counters(vp);
+    dump_cpu_event_counters(vp);
+}
+
+pub fn dump_apic_counters(vp: &VirtualProcessor) {
+    let counters: WHV_PROCESSOR_COUNTERS = vp
+        .get_processor_counters(
+            WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetApic)
+        .unwrap();
+    unsafe { println!("Apic counters: {:?}\n", counters.ApicCounters); }
+}
+
+pub fn dump_cpu_runtime_counters(vp: &VirtualProcessor) {
+    let counters: WHV_PROCESSOR_COUNTERS = vp
+        .get_processor_counters(
+            WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetRuntime)
+        .unwrap();
+    unsafe { println!("CPU runtime counters: {:?}\n", counters.RuntimeCounters); }
+}
+
+pub fn dump_cpu_intercept_counters(vp: &VirtualProcessor) {
+    let counters: WHV_PROCESSOR_COUNTERS = vp
+        .get_processor_counters(
+            WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetIntercepts)
+        .unwrap();
+    unsafe { println!("CPU intercept counters: {:?}\n", counters.InterceptCounters); }
+}
+
+pub fn dump_cpu_event_counters(vp: &VirtualProcessor) {
+    let counters: WHV_PROCESSOR_COUNTERS = vp
+        .get_processor_counters(
+            WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetEvents)
+        .unwrap();
+    unsafe { println!("CPU event counters: {:?}\n", counters.EventCounters); }
+}
