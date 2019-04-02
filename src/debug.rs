@@ -212,7 +212,7 @@ pub fn dump_apic_counters(vp: &VirtualProcessor) {
         .get_processor_counters(
             WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetApic)
         .unwrap();
-    unsafe { println!("Apic counters: {:?}\n", counters.ApicCounters); }
+    unsafe { println!("Apic counters: {:#?}\n", counters.ApicCounters); }
 }
 
 pub fn dump_cpu_runtime_counters(vp: &VirtualProcessor) {
@@ -220,7 +220,7 @@ pub fn dump_cpu_runtime_counters(vp: &VirtualProcessor) {
         .get_processor_counters(
             WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetRuntime)
         .unwrap();
-    unsafe { println!("CPU runtime counters: {:?}\n", counters.RuntimeCounters); }
+    unsafe { println!("CPU runtime counters: {:#?}\n", counters.RuntimeCounters); }
 }
 
 pub fn dump_cpu_intercept_counters(vp: &VirtualProcessor) {
@@ -228,7 +228,7 @@ pub fn dump_cpu_intercept_counters(vp: &VirtualProcessor) {
         .get_processor_counters(
             WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetIntercepts)
         .unwrap();
-    unsafe { println!("CPU intercept counters: {:?}\n", counters.InterceptCounters); }
+    unsafe { println!("CPU intercept counters: {:#?}\n", counters.InterceptCounters); }
 }
 
 pub fn dump_cpu_event_counters(vp: &VirtualProcessor) {
@@ -236,5 +236,5 @@ pub fn dump_cpu_event_counters(vp: &VirtualProcessor) {
         .get_processor_counters(
             WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetEvents)
         .unwrap();
-    unsafe { println!("CPU event counters: {:?}\n", counters.EventCounters); }
+    unsafe { println!("CPU event counters: {:#?}\n", counters.EventCounters); }
 }

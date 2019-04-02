@@ -149,6 +149,8 @@ fn main() {
             break;
         }
     }
+
+    debug::dump_cpu_counters(&vp_ref_cell.borrow());
 }
 
 /*
