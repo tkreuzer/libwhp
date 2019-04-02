@@ -71,6 +71,16 @@ impl VirtualMemory {
             }),
         }
     }
+
+    pub fn from_slice(slice: &[u8]) -> Option<Self> {
+        // let address = unsafe {
+        //     slice.as_ptr();
+        // };
+        Some(VirtualMemory {
+            address: slice.as_ptr() as *mut VOID,
+            size: slice.len()
+        })
+    }
 }
 
 impl Memory for VirtualMemory {
@@ -89,6 +99,7 @@ impl Memory for VirtualMemory {
 
 impl Drop for VirtualMemory {
     fn drop(&mut self) {
+        println!("Dropping memory: {:?} ({:?})", self.address, self.size);
         unsafe { VirtualFree(self.address, 0, MEM_RELEASE) };
     }
 }

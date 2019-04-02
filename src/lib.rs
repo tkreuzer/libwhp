@@ -21,6 +21,7 @@ mod macros;
 mod common;
 pub mod instruction_emulator;
 pub mod interrupts;
+pub mod debug;
 mod platform;
 mod win_hv_emulation;
 mod win_hv_emulation_defs;
