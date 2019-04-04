@@ -128,10 +128,10 @@ fn main() {
                 handle_msr_exit(&mut vp_ref_cell.borrow_mut(), &exit_context)
             }
             WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonX64ApicEoi => {
-                continue;
+                println!("ApicEoi");
             }
             WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonX64InterruptWindow => {
-                continue;
+                println!("Interrupt window");
             }
             _ => panic!("Unexpected exit type: {:?}", exit_context.ExitReason),
         };
@@ -584,18 +584,19 @@ impl<'a> EmulatorCallbacks for SampleCallbacks<'a> {
         _context: *mut VOID,
         memory_access: &mut WHV_EMULATOR_MEMORY_ACCESS_INFO,
     ) -> HRESULT {
+        let addr = memory_access.GpaAddress;
         match memory_access.AccessSize {
             8 => match memory_access.Direction {
                 0 => {
                     let data = &memory_access.Data as *const _ as *mut u64;
                     unsafe {
                         *data = 0x1000;
-                        println!("MMIO read: 0x{:x}", *data);
+                        println!("MMIO read: 0x{:x} @0x{:x}", *data, addr);
                     }
                 }
                 _ => {
                     let value = unsafe { *(&memory_access.Data as *const _ as *const u64) };
-                    println!("MMIO write: 0x{:x}", value);
+                    println!("MMIO write: 0x{:x} @0x{:x}", value, addr);
                 }
             },
             4 => match memory_access.Direction {
@@ -603,12 +604,12 @@ impl<'a> EmulatorCallbacks for SampleCallbacks<'a> {
                     let data = &memory_access.Data as *const _ as *mut u32;
                     unsafe {
                         *data = 0x1000;
-                        println!("MMIO read: 0x{:x}", *data);
+                        println!("MMIO read: 0x{:x} @0x{:x}", *data, addr);
                     }
                 }
                 _ => {
                     let value = unsafe { *(&memory_access.Data as *const _ as *const u32) };
-                    println!("MMIO write: 0x{:x}", value);
+                    println!("MMIO write: 0x{:x} @0x{:x}", value, addr);
                 }
             },
             _ => println!("Unsupported MMIO access size: {}", memory_access.AccessSize),
