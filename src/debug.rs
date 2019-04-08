@@ -97,13 +97,9 @@ pub fn dump_table_regs(vp: &VirtualProcessor) {
     // Get the registers as a baseline
     vp.get_registers(&reg_names, &mut reg_values).unwrap();
 
-    let mut idx = 0;
-    println!("Table regs:");
-    for v in reg_names.iter() {
-        unsafe {
-            println!("{:?} = {}", v, reg_values[idx].Table);
-        }
-        idx += 1;
+    unsafe {
+        println!("Idtr = {:?}", reg_values[0].Table);
+        println!("Gdtr = {:0?}", reg_values[1].Table);
     }
     println!("");
 }
