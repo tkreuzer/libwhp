@@ -14,7 +14,7 @@ pub fn dump_vp_regs(vp: &VirtualProcessor) {
     dump_segment_regs(vp);
     dump_table_regs(vp);
     dump_control_regs(vp);
-    // Skipping debug registers
+    dump_debug_regs(vp);
     // SKipping Xmm registers (for now)
     dump_msr_regs(vp);
     dump_interrupt_regs(vp);
@@ -127,6 +127,34 @@ pub fn dump_control_regs(vp: &VirtualProcessor) {
         idx += 1;
     }
     println!("");
+}
+
+pub fn dump_debug_regs(vp: &VirtualProcessor) {
+    const NUM_REGS: usize = 6;
+    let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
+        WHV_REGISTER_NAME::WHvX64RegisterDr0,
+        WHV_REGISTER_NAME::WHvX64RegisterDr1,
+        WHV_REGISTER_NAME::WHvX64RegisterDr2,
+        WHV_REGISTER_NAME::WHvX64RegisterDr3,
+        WHV_REGISTER_NAME::WHvX64RegisterDr6,
+        WHV_REGISTER_NAME::WHvX64RegisterDr7,
+    ];
+    let mut reg_values: [WHV_REGISTER_VALUE; NUM_REGS] = Default::default();
+
+    vp.get_registers(&reg_names, &mut reg_values).unwrap();
+
+    unsafe {
+        println!(
+            "Dr0={:016x} Dr1={:016x} Dr2={:016x} \n\
+             Dr3={:016x} Dr6={:016x} Dr7={:016x}",
+            reg_values[0].Reg64,
+            reg_values[1].Reg64,
+            reg_values[2].Reg64,
+            reg_values[3].Reg64,
+            reg_values[4].Reg64,
+            reg_values[5].Reg64,
+        );
+    }
 }
 
 pub fn dump_msr_regs(vp: &VirtualProcessor) {
