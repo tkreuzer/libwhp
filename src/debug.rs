@@ -1,5 +1,4 @@
 use platform::*;
-use win_hv_platform::*;
 pub use win_hv_platform_defs::*;
 pub use win_hv_platform_defs_internal::*;
 
@@ -21,7 +20,7 @@ pub fn dump_virtual_processor_registers(vp: &VirtualProcessor) {
 
 pub fn dump_regs(vp: &VirtualProcessor) {
     const NUM_REGS: usize = 18;
-    let mut reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
+    let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
         WHV_REGISTER_NAME::WHvX64RegisterRax,
         WHV_REGISTER_NAME::WHvX64RegisterRcx,
         WHV_REGISTER_NAME::WHvX64RegisterRdx,
@@ -59,7 +58,7 @@ pub fn dump_regs(vp: &VirtualProcessor) {
 
 pub fn dump_sregs(vp: &VirtualProcessor) {
     const NUM_REGS: usize = 8;
-    let mut reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
+    let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
         WHV_REGISTER_NAME::WHvX64RegisterEs,
         WHV_REGISTER_NAME::WHvX64RegisterCs,
         WHV_REGISTER_NAME::WHvX64RegisterSs,
@@ -87,7 +86,7 @@ pub fn dump_sregs(vp: &VirtualProcessor) {
 
 pub fn dump_table_regs(vp: &VirtualProcessor) {
     const NUM_REGS: usize = 2;
-    let mut reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
+    let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
         WHV_REGISTER_NAME::WHvX64RegisterIdtr,
         WHV_REGISTER_NAME::WHvX64RegisterGdtr,
     ];
@@ -109,7 +108,7 @@ pub fn dump_table_regs(vp: &VirtualProcessor) {
 
 pub fn dump_control_regs(vp: &VirtualProcessor) {
     const NUM_REGS: usize = 5;
-    let mut reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
+    let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
         WHV_REGISTER_NAME::WHvX64RegisterCr0,
         WHV_REGISTER_NAME::WHvX64RegisterCr2,
         WHV_REGISTER_NAME::WHvX64RegisterCr3,
@@ -134,7 +133,7 @@ pub fn dump_control_regs(vp: &VirtualProcessor) {
 
 pub fn dump_msr_regs(vp: &VirtualProcessor) {
     const NUM_REGS: usize = 12;
-    let mut reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
+    let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
         WHV_REGISTER_NAME::WHvX64RegisterTsc,
         WHV_REGISTER_NAME::WHvX64RegisterEfer,
         WHV_REGISTER_NAME::WHvX64RegisterKernelGsBase,
@@ -166,7 +165,7 @@ pub fn dump_msr_regs(vp: &VirtualProcessor) {
 
 pub fn dump_interrupt_regs(vp: &VirtualProcessor) {
     const NUM_REGS: usize = 5;
-    let mut reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
+    let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
         WHV_REGISTER_NAME::WHvRegisterPendingInterruption,
         WHV_REGISTER_NAME::WHvRegisterInterruptState,
         WHV_REGISTER_NAME::WHvRegisterPendingEvent,

@@ -72,11 +72,11 @@ macro_rules! bitfield128 {
                 let mask = ((1 << ($r.end - $r.start)) - 1) << ($r.start % 64);
                 if $r.start < 64 {
                     self.$field.Low64 &= !mask;
-                    self.$field.Low64 |= (val << ($r.start % 64) & mask);
+                    self.$field.Low64 |= val << ($r.start % 64) & mask;
                 }
                 else {
                     self.$field.High64 &= !mask;
-                    self.$field.High64 |= (val << ($r.start % 64) & mask);
+                    self.$field.High64 |= val << ($r.start % 64) & mask;
                 }
             }
         )+}
