@@ -9,9 +9,9 @@ pub fn dump_run_context(run_context: &WHV_RUN_VP_EXIT_CONTEXT) {
     println!("Execution state: {}", run_context.VpContext.ExecutionState);
 }
 
-pub fn dump_virtual_processor_registers(vp: &VirtualProcessor) {
-    dump_regs(vp);
-    dump_sregs(vp);
+pub fn dump_vp_regs(vp: &VirtualProcessor) {
+    dump_gp_regs(vp);
+    dump_segment_regs(vp);
     dump_table_regs(vp);
     dump_control_regs(vp);
     // Skipping debug registers
@@ -20,7 +20,7 @@ pub fn dump_virtual_processor_registers(vp: &VirtualProcessor) {
     dump_interrupt_regs(vp);
 }
 
-pub fn dump_regs(vp: &VirtualProcessor) {
+pub fn dump_gp_regs(vp: &VirtualProcessor) {
     const NUM_REGS: usize = 18;
     let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
         WHV_REGISTER_NAME::WHvX64RegisterRax,
@@ -58,7 +58,7 @@ pub fn dump_regs(vp: &VirtualProcessor) {
     println!("");
 }
 
-pub fn dump_sregs(vp: &VirtualProcessor) {
+pub fn dump_segment_regs(vp: &VirtualProcessor) {
     const NUM_REGS: usize = 8;
     let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
         WHV_REGISTER_NAME::WHvX64RegisterEs,
