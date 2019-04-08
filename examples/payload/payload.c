@@ -23,6 +23,7 @@
 
 extern void interrupt_handler_host();
 extern void interrupt_handler_guest();
+extern void int3_handler();
 
 #define CPUID_EXT_HYPERVISOR ((uint32_t)(1 << 31))
 
@@ -90,12 +91,12 @@ static inline uint64_t mmio_readq(volatile void *addr)
    description, lacking APIs like snprintf.
 */
 __attribute__((unused))
-void print_dec(uint32_t value, char* desc)
+void print_dec(uint64_t value, char* desc)
 {
     char buf[BUF_SIZE];
     char value_str[MAX_VALUE_CHARS];
     uint32_t len;
-    
+
     len = itoa(value, value_str);
 
     memcpy(buf, value_str, MAX_VALUE_CHARS);
@@ -199,6 +200,13 @@ void log_interrupt_from_guest()
     clear_apic_eoi();
 }
 
+void log_int3()
+{
+    out_string(LOG_PORT, "Int3 received.\n");
+    clear_apic_eoi();
+}
+
+
 /*
     Send the IPI by writing to the two Interrupt Command Registers (ICRs). They
     are memory mapped at APIC_BASE + 0x300 (low register) and APIC_BASE + 0x310
@@ -224,13 +232,18 @@ __attribute__((section(".start")))
 _start(void) {
     initialize_gdt(Gdt);
     initialize_idt(Idt);
-    
+
     out_string(LOG_PORT, "Greetings from the guest!\n");
 
     register_interrupt_handler(Idt, HOST_INT_VECTOR, (void*)interrupt_handler_host);
     register_interrupt_handler(Idt, GUEST_INT_VECTOR, (void*)interrupt_handler_guest);
+    register_interrupt_handler(Idt, 3, (void*)int3_handler);
+
+    print_dec((uint64_t)int3_handler, ": int3 handler\n");
 
     enable_interrupt_flag();
+
+    asm("int3");
 
     unsigned regs[] = {0, 0, 0, 0};
     get_cpuid(1, regs);
@@ -274,8 +287,10 @@ _start(void) {
     // Only halt the vcpu if interrupts are not enabled. Otherwise, the host
     // will take care of terminating the guest.
     if (interrupts_enabled == 0) {
+        out_string(LOG_PORT, "Halting\n");
         halt(0);
     }
 
+    out_string(LOG_PORT, "Exiting\n");
     return;
 }

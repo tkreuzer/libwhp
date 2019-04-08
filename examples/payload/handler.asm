@@ -15,6 +15,7 @@
 
 .globl interrupt_handler_host
 .globl interrupt_handler_guest
+.globl int3_handler
 .align 4
 .intel_syntax noprefix
 
@@ -64,5 +65,10 @@ interrupt_handler_guest:
     RESTORE_VOLATILE_REGS
     iretq
 
+int3_handler:
+    SAVE_VOLATILE_REGS
+    call log_int3
+    RESTORE_VOLATILE_REGS
+    iretq
 
 

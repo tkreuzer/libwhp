@@ -151,6 +151,8 @@ fn main() {
     }
 
     debug::dump_cpu_counters(&vp_ref_cell.borrow());
+    debug::dump_virtual_processor_registers(&vp_ref_cell.borrow());
+    // std::thread::sleep(std::time::Duration::from_secs(30));
 }
 
 /*
@@ -163,7 +165,7 @@ fn all_interrupts_received(vp: &VirtualProcessor) -> bool {
         .unwrap();
     let apic_counters = unsafe { counters.ApicCounters };
 
-    if apic_counters.EoiAccessCount == 2 {
+    if apic_counters.EoiAccessCount > 2 {
         true
     } else {
         false
