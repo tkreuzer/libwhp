@@ -644,11 +644,11 @@ pub struct WHV_X64_TABLE_REGISTER {
 
 impl fmt::Display for WHV_X64_TABLE_REGISTER {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(f, "WHV_X64_TABLE_REGISTER:");
-        writeln!(f, "Pad: {:?}", self.Pad);
-        writeln!(f, "Limit: {}", self.Limit);
-        writeln!(f, "Base: {}", self.Base);
-        Ok(())
+        writeln!(
+            f,
+            "(Pad: {:?} Limit: {} Base: {})",
+            self.Pad, self.Limit, self.Base
+        )
     }
 }
 
@@ -900,10 +900,7 @@ pub struct WHV_UINT128 {
 
 impl fmt::Display for WHV_UINT128 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(f, "WHV_UINT128:");
-        writeln!(f, "Low64: {}", self.Low64);
-        writeln!(f, "High64: {}", self.High64);
-        Ok(())
+        writeln!(f, "{:016x}`{:016x}", self.High64, self.Low64)
     }
 }
 
