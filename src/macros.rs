@@ -46,7 +46,6 @@ macro_rules! bitfield {
     }
 }
 
-
 // Assumes that WHV_UINT128 is used.
 macro_rules! bitfield128 {
     ($base:ident $field:ident: $fieldtype:ty [
@@ -96,4 +95,3 @@ macro_rules! bitfield128 {
         }
     }
 }
-

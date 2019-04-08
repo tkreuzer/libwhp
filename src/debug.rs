@@ -49,7 +49,9 @@ pub fn dump_regs(vp: &VirtualProcessor) {
     let mut idx = 0;
     println!("Regs:");
     for v in reg_names.iter() {
-        unsafe { println!("{:?} = 0x{:x?}", v, reg_values[idx].Reg64); }
+        unsafe {
+            println!("{:?} = 0x{:x?}", v, reg_values[idx].Reg64);
+        }
         idx += 1;
     }
     println!("");
@@ -75,7 +77,9 @@ pub fn dump_sregs(vp: &VirtualProcessor) {
     let mut idx = 0;
     println!("Segment regs:");
     for v in reg_names.iter() {
-        unsafe { println!("{:?} = {}", v, reg_values[idx].Segment); }
+        unsafe {
+            println!("{:?} = {}", v, reg_values[idx].Segment);
+        }
         idx += 1;
     }
     println!("");
@@ -95,7 +99,9 @@ pub fn dump_table_regs(vp: &VirtualProcessor) {
     let mut idx = 0;
     println!("Table regs:");
     for v in reg_names.iter() {
-        unsafe { println!("{:?} = {}", v, reg_values[idx].Table); }
+        unsafe {
+            println!("{:?} = {}", v, reg_values[idx].Table);
+        }
         idx += 1;
     }
     println!("");
@@ -118,7 +124,9 @@ pub fn dump_control_regs(vp: &VirtualProcessor) {
     let mut idx = 0;
     println!("Control regs:");
     for v in reg_names.iter() {
-        unsafe { println!("{:?} = 0x{:x?}", v, reg_values[idx].Reg64); }
+        unsafe {
+            println!("{:?} = 0x{:x?}", v, reg_values[idx].Reg64);
+        }
         idx += 1;
     }
     println!("");
@@ -148,7 +156,9 @@ pub fn dump_msr_regs(vp: &VirtualProcessor) {
     let mut idx = 0;
     println!("Msr regs:");
     for v in reg_names.iter() {
-        unsafe { println!("{:?} = 0x{:x?}", v, reg_values[idx].Reg64); }
+        unsafe {
+            println!("{:?} = 0x{:x?}", v, reg_values[idx].Reg64);
+        }
         idx += 1;
     }
     println!("");
@@ -170,33 +180,42 @@ pub fn dump_interrupt_regs(vp: &VirtualProcessor) {
 
     println!("Interrupt regs:");
     let mut idx = 0;
-    unsafe { println!("{:?} = {}",
-             reg_names[idx], reg_values[idx].PendingInterruption); }
-    let event_type = unsafe {reg_values[idx].PendingInterruption.InterruptionType()};
-
-    idx += 1;
-    unsafe { println!("{:?} = {}",
-             reg_names[idx], reg_values[idx].InterruptState); }
-    idx += 1;
-
-    if event_type ==
-            WHV_X64_PENDING_EVENT_TYPE::WHvX64PendingEventException as u64 {
-        unsafe { println!("{:?} = {}",
-                          reg_names[idx], reg_values[idx].ExceptionEvent);}
-    } else if event_type ==
-            WHV_X64_PENDING_EVENT_TYPE::WHvX64PendingEventException as u64 {
-        unsafe { println!("{:?} = {}", reg_names[idx],
-                          reg_values[idx].ExtIntEvent);}
+    unsafe {
+        println!(
+            "{:?} = {}",
+            reg_names[idx], reg_values[idx].PendingInterruption
+        );
     }
-    else {
+    let event_type = unsafe { reg_values[idx].PendingInterruption.InterruptionType() };
+
+    idx += 1;
+    unsafe {
+        println!("{:?} = {}", reg_names[idx], reg_values[idx].InterruptState);
+    }
+    idx += 1;
+
+    if event_type == WHV_X64_PENDING_EVENT_TYPE::WHvX64PendingEventException as u64 {
+        unsafe {
+            println!("{:?} = {}", reg_names[idx], reg_values[idx].ExceptionEvent);
+        }
+    } else if event_type == WHV_X64_PENDING_EVENT_TYPE::WHvX64PendingEventException as u64 {
+        unsafe {
+            println!("{:?} = {}", reg_names[idx], reg_values[idx].ExtIntEvent);
+        }
+    } else {
         println!("Unknown event type: {}", event_type);
     }
     idx += 1;
-    unsafe { println!("{:?} = {}", reg_names[idx],
-                      reg_values[idx].DeliverabilityNotifications); }
+    unsafe {
+        println!(
+            "{:?} = {}",
+            reg_names[idx], reg_values[idx].DeliverabilityNotifications
+        );
+    }
     idx += 1;
-    unsafe { println!("{:?} = {}", reg_names[idx],
-                      reg_values[idx].Reg128); }
+    unsafe {
+        println!("{:?} = {}", reg_names[idx], reg_values[idx].Reg128);
+    }
     println!("");
 }
 
@@ -209,32 +228,39 @@ pub fn dump_cpu_counters(vp: &VirtualProcessor) {
 
 pub fn dump_apic_counters(vp: &VirtualProcessor) {
     let counters: WHV_PROCESSOR_COUNTERS = vp
-        .get_processor_counters(
-            WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetApic)
+        .get_processor_counters(WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetApic)
         .unwrap();
-    unsafe { println!("Apic counters: {:#?}\n", counters.ApicCounters); }
+    unsafe {
+        println!("Apic counters: {:#?}\n", counters.ApicCounters);
+    }
 }
 
 pub fn dump_cpu_runtime_counters(vp: &VirtualProcessor) {
     let counters: WHV_PROCESSOR_COUNTERS = vp
-        .get_processor_counters(
-            WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetRuntime)
+        .get_processor_counters(WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetRuntime)
         .unwrap();
-    unsafe { println!("CPU runtime counters: {:#?}\n", counters.RuntimeCounters); }
+    unsafe {
+        println!("CPU runtime counters: {:#?}\n", counters.RuntimeCounters);
+    }
 }
 
 pub fn dump_cpu_intercept_counters(vp: &VirtualProcessor) {
     let counters: WHV_PROCESSOR_COUNTERS = vp
-        .get_processor_counters(
-            WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetIntercepts)
+        .get_processor_counters(WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetIntercepts)
         .unwrap();
-    unsafe { println!("CPU intercept counters: {:#?}\n", counters.InterceptCounters); }
+    unsafe {
+        println!(
+            "CPU intercept counters: {:#?}\n",
+            counters.InterceptCounters
+        );
+    }
 }
 
 pub fn dump_cpu_event_counters(vp: &VirtualProcessor) {
     let counters: WHV_PROCESSOR_COUNTERS = vp
-        .get_processor_counters(
-            WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetEvents)
+        .get_processor_counters(WHV_PROCESSOR_COUNTER_SET::WHvProcessorCounterSetEvents)
         .unwrap();
-    unsafe { println!("CPU event counters: {:#?}\n", counters.EventCounters); }
+    unsafe {
+        println!("CPU event counters: {:#?}\n", counters.EventCounters);
+    }
 }

@@ -78,7 +78,7 @@ impl VirtualMemory {
         // };
         Some(VirtualMemory {
             address: slice.as_ptr() as *mut VOID,
-            size: slice.len()
+            size: slice.len(),
         })
     }
 }

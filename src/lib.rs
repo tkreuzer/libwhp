@@ -19,9 +19,9 @@ extern crate libc;
 mod macros;
 
 mod common;
+pub mod debug;
 pub mod instruction_emulator;
 pub mod interrupts;
-pub mod debug;
 mod platform;
 mod win_hv_emulation;
 mod win_hv_emulation_defs;

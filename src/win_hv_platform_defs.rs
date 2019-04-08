@@ -652,7 +652,6 @@ impl fmt::Display for WHV_X64_TABLE_REGISTER {
     }
 }
 
-
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, Default)]
 #[allow(non_snake_case)]
 #[repr(C)]
@@ -907,7 +906,6 @@ impl fmt::Display for WHV_UINT128 {
         Ok(())
     }
 }
-
 
 impl Shl<usize> for WHV_UINT128 {
     type Output = Self;
