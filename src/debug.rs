@@ -174,13 +174,33 @@ pub fn dump_gp_regs(vp: &VirtualProcessor) {
     // Get the registers as a baseline
     vp.get_registers(&reg_names, &mut reg_values).unwrap();
 
-    let mut idx = 0;
     println!("Regs:");
-    for v in reg_names.iter() {
-        unsafe {
-            println!("{:?} = 0x{:x?}", v, reg_values[idx].Reg64);
-        }
-        idx += 1;
+    unsafe {
+        println!(
+            "  Rax: {:016x} Rcx: {:016x} Rdx: {:016x} Rbx: {:016x}\n\
+             \x20 Rsp: {:016x} Rbp: {:016x} Rsi: {:016x} Rdi: {:016x}\n\
+             \x20 R8:  {:016x} R9:  {:016x} R10: {:016x} R11: {:016x}\n\
+             \x20 R12: {:016x} R13: {:016x} R14: {:016x} R15: {:016x}\n\
+             \x20 Rip: {:016x} Rflags: {:016x}",
+            reg_values[0].Reg64,
+            reg_values[1].Reg64,
+            reg_values[2].Reg64,
+            reg_values[3].Reg64,
+            reg_values[4].Reg64,
+            reg_values[5].Reg64,
+            reg_values[6].Reg64,
+            reg_values[7].Reg64,
+            reg_values[8].Reg64,
+            reg_values[9].Reg64,
+            reg_values[10].Reg64,
+            reg_values[11].Reg64,
+            reg_values[12].Reg64,
+            reg_values[13].Reg64,
+            reg_values[14].Reg64,
+            reg_values[15].Reg64,
+            reg_values[16].Reg64,
+            reg_values[17].Reg64
+        );
     }
     println!("");
 }
