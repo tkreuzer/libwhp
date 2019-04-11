@@ -17,6 +17,8 @@ pub fn dump_vp_regs(vp: &VirtualProcessor) {
     dump_debug_regs(vp);
     dump_fp_regs(vp);
     dump_msr_regs(vp);
+    dump_mtr_regs(vp);
+    dump_mtrfix_regs(vp);
     dump_interrupt_regs(vp);
 }
 
@@ -281,6 +283,115 @@ pub fn dump_msr_regs(vp: &VirtualProcessor) {
         idx += 1;
     }
     println!("");
+}
+
+pub fn dump_mtr_regs(vp: &VirtualProcessor) {
+    const NUM_REGS: usize = 16;
+    let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBase0,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMask0,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBase1,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMask1,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBase2,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMask2,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBase3,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMask3,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBase4,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMask4,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBase5,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMask5,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBase6,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMask6,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBase7,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMask7,
+        /*
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBase8,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMask8,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBase9,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMask9,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBaseA,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMaskA,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBaseB,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMaskB,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBaseC,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMaskC,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBaseD,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMaskD,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBaseE,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMaskE,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysBaseF,
+                WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrPhysMaskF,
+        */
+    ];
+    let mut reg_values: [WHV_REGISTER_VALUE; NUM_REGS] = Default::default();
+
+    vp.get_registers(&reg_names, &mut reg_values).unwrap();
+
+    unsafe {
+        println!(
+            "Mtrr0={:016x}, Mask0={:016x}, Mtrr1={:016x}, Mask1={:016x}\n\
+             Mtrr2={:016x}, Mask2={:016x}, Mtrr3={:016x}, Mask3={:016x}\n\
+             Mtrr4={:016x}, Mask4={:016x}, Mtrr5={:016x}, Mask5={:016x}\n\
+             Mtrr6={:016x}, Mask6={:016x}, Mtrr7={:016x}, Mask7={:016x}",
+            reg_values[0].Reg64,
+            reg_values[1].Reg64,
+            reg_values[2].Reg64,
+            reg_values[3].Reg64,
+            reg_values[4].Reg64,
+            reg_values[5].Reg64,
+            reg_values[6].Reg64,
+            reg_values[7].Reg64,
+            reg_values[8].Reg64,
+            reg_values[9].Reg64,
+            reg_values[10].Reg64,
+            reg_values[11].Reg64,
+            reg_values[12].Reg64,
+            reg_values[13].Reg64,
+            reg_values[14].Reg64,
+            reg_values[15].Reg64,
+        );
+    }
+}
+
+pub fn dump_mtrfix_regs(vp: &VirtualProcessor) {
+    const NUM_REGS: usize = 11;
+    let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix64k00000,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix16k80000,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix16kA0000,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix4kC0000,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix4kC8000,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix4kD0000,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix4kD8000,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix4kE0000,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix4kE8000,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix4kF0000,
+        WHV_REGISTER_NAME::WHvX64RegisterMsrMtrrFix4kF8000,
+    ];
+    let mut reg_values: [WHV_REGISTER_VALUE; NUM_REGS] = Default::default();
+
+    vp.get_registers(&reg_names, &mut reg_values).unwrap();
+
+    unsafe {
+        println!(
+            "[00000]:{:016x}, [80000]:{:016x}, [A0000]:{:016x},\n\
+             [C0000]:{:016x}, [C8000]:{:016x}, \n\
+             [D0000]:{:016x}, [D8000]:{:016x}, \n\
+             [E0000]:{:016x}, [E8000]:{:016x}, \n\
+             [F0000]:{:016x}, [F8000]:{:016x}",
+            reg_values[0].Reg64,
+            reg_values[1].Reg64,
+            reg_values[2].Reg64,
+            reg_values[3].Reg64,
+            reg_values[4].Reg64,
+            reg_values[5].Reg64,
+            reg_values[6].Reg64,
+            reg_values[7].Reg64,
+            reg_values[8].Reg64,
+            reg_values[9].Reg64,
+            reg_values[10].Reg64,
+        );
+    }
 }
 
 pub fn dump_interrupt_regs(vp: &VirtualProcessor) {
