@@ -7,6 +7,131 @@ pub fn dump_run_context(run_context: &WHV_RUN_VP_EXIT_CONTEXT) {
     println!("Reserved = {}", run_context.Reserved);
     println!("Run context: {:?}", run_context.VpContext);
     println!("Execution state: {}", run_context.VpContext.ExecutionState);
+
+    unsafe {
+        match run_context.ExitReason {
+            WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonMemoryAccess => {
+                dump_memory_access_context(&run_context.anon_union.MemoryAccess);
+            }
+            WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonX64IoPortAccess => {
+                dump_port_io_context(&run_context.anon_union.IoPortAccess);
+            }
+            WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonX64MsrAccess => {
+                dump_msr_access_context(&run_context.anon_union.MsrAccess);
+            }
+            WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonX64Cpuid => {
+                dump_cpuid_access_context(&run_context.anon_union.CpuidAccess);
+            }
+            WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonException => {
+                dump_vp_exception_context(&run_context.anon_union.VpException);
+            }
+            WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonX64InterruptWindow => {
+                dump_interrupt_window_context(&run_context.anon_union.InterruptWindow);
+            }
+            WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonUnsupportedFeature => {
+                dump_unsupported_feature_context(&run_context.anon_union.UnsupportedFeature);
+            }
+            WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonCanceled => {
+                dump_vp_cancelled_context(&run_context.anon_union.CancelReason);
+            }
+            WHV_RUN_VP_EXIT_REASON::WHvRunVpExitReasonX64ApicEoi => {
+                dump_apic_eoi_context(&run_context.anon_union.ApicEoi);
+            }
+            _ => {
+                println!("unexected exit reason!");
+            }
+        }
+    }
+
+    println!("");
+}
+
+fn dump_instruction_bytes(bytes: &[u8]) {
+    for idx in 0..bytes.len() {
+        if (idx > 0) && (idx % 16 == 0) {
+            println!("");
+        }
+        print!("{:02x} ", bytes[idx]);
+    }
+    println!("");
+}
+
+fn dump_memory_access_context(context: &WHV_MEMORY_ACCESS_CONTEXT) {
+    println!("MemoryAccess:");
+    println!("  InstructionByteCount: {}", context.InstructionByteCount);
+    print!("  InstructionBytes: ");
+    dump_instruction_bytes(&context.InstructionBytes);
+    println!("  AccessInfo: 0x{:x}", context.AccessInfo.AsUINT32);
+    println!("  Gpa: 0x{:x}", context.Gpa);
+    println!("  Gva: 0x{:x}", context.Gva);
+}
+
+fn dump_port_io_context(context: &WHV_X64_IO_PORT_ACCESS_CONTEXT) {
+    println!("IoPortAccess:");
+
+    // Context of the virtual processor
+    println!(
+        "  InstructionByteCount: 0x{:x}",
+        context.InstructionByteCount
+    );
+    println!("  Reserved: {:?}", context.Reserved);
+    print!("  InstructionBytes: ");
+    dump_instruction_bytes(&context.InstructionBytes);
+
+    // I/O port access info
+    println!("  AccessInfo: {:?}", context.AccessInfo);
+    println!("  PortNumber: 0x{:x}", context.PortNumber);
+    println!("  Reserved2: {:?}", context.Reserved2);
+    println!(
+        "  Rax: 0x{:016x} Rcx: 0x{:016x} Rsi: 0x{:016x} Rdi: 0x{:016x}",
+        context.Rax, context.Rcx, context.Rsi, context.Rdi
+    );
+    println!("  Ds: {:?}", context.Ds);
+    println!("  Es: {:?}", context.Es);
+}
+
+fn dump_msr_access_context(context: &WHV_X64_MSR_ACCESS_CONTEXT) {
+    println!("MsrAccess:");
+    println!(
+        "  MsrNumber: 0x{:x} AccessInfo: {}",
+        context.MsrNumber, context.AccessInfo.AsUINT32
+    );
+    println!("  Rax: 0x{:016x} Rdx: 0x{:016x}", context.Rax, context.Rdx);
+}
+
+fn dump_cpuid_access_context(context: &WHV_X64_CPUID_ACCESS_CONTEXT) {
+    println!("CpuidAccess:");
+    println!(
+        "  Rax: {:016?} Rbx: {:016?} Rcx: {:016?} Rdx: {:016?}",
+        context.Rax, context.Rbx, context.Rcx, context.Rdx
+    );
+    println!(
+        "  DefaultResult Rax: {:016?} Rbx: {:016?} Rcx: {:016?} Rdx: {:016?}",
+        context.DefaultResultRax,
+        context.DefaultResultRbx,
+        context.DefaultResultRcx,
+        context.DefaultResultRdx
+    );
+}
+
+fn dump_vp_exception_context(context: &WHV_VP_EXCEPTION_CONTEXT) {
+    println!("VpException: {:?}", context);
+}
+
+fn dump_interrupt_window_context(context: &WHV_X64_INTERRUPTION_DELIVERABLE_CONTEXT) {
+    println!("InterruptWindow: {:?}", context);
+}
+
+fn dump_unsupported_feature_context(context: &WHV_X64_UNSUPPORTED_FEATURE_CONTEXT) {
+    println!("UnsupportedFeature: {:?}", context);
+}
+
+fn dump_vp_cancelled_context(context: &WHV_RUN_VP_CANCELED_CONTEXT) {
+    println!("CancelReason: {:?}", context);
+}
+
+fn dump_apic_eoi_context(context: &WHV_X64_APIC_EOI_CONTEXT) {
+    println!("ApicEoi: {:?}", context);
 }
 
 pub fn dump_vp_regs(vp: &VirtualProcessor) {
