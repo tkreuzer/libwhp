@@ -15,7 +15,7 @@ pub fn dump_vp_regs(vp: &VirtualProcessor) {
     dump_table_regs(vp);
     dump_control_regs(vp);
     dump_debug_regs(vp);
-    // SKipping Xmm registers (for now)
+    dump_fp_regs(vp);
     dump_msr_regs(vp);
     dump_interrupt_regs(vp);
 }
@@ -153,6 +153,100 @@ pub fn dump_debug_regs(vp: &VirtualProcessor) {
             reg_values[3].Reg64,
             reg_values[4].Reg64,
             reg_values[5].Reg64,
+        );
+    }
+}
+
+fn dump_fp_regs(vp: &VirtualProcessor) {
+    const NUM_REGS: usize = 26;
+    let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
+        WHV_REGISTER_NAME::WHvX64RegisterXmm0,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm1,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm2,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm3,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm4,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm5,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm6,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm7,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm8,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm9,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm10,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm11,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm12,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm13,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm14,
+        WHV_REGISTER_NAME::WHvX64RegisterXmm15,
+        WHV_REGISTER_NAME::WHvX64RegisterFpMmx0,
+        WHV_REGISTER_NAME::WHvX64RegisterFpMmx1,
+        WHV_REGISTER_NAME::WHvX64RegisterFpMmx2,
+        WHV_REGISTER_NAME::WHvX64RegisterFpMmx3,
+        WHV_REGISTER_NAME::WHvX64RegisterFpMmx4,
+        WHV_REGISTER_NAME::WHvX64RegisterFpMmx5,
+        WHV_REGISTER_NAME::WHvX64RegisterFpMmx6,
+        WHV_REGISTER_NAME::WHvX64RegisterFpMmx7,
+        WHV_REGISTER_NAME::WHvX64RegisterFpControlStatus,
+        WHV_REGISTER_NAME::WHvX64RegisterXmmControlStatus,
+    ];
+    let mut reg_values: [WHV_REGISTER_VALUE; NUM_REGS] = Default::default();
+
+    vp.get_registers(&reg_names, &mut reg_values).unwrap();
+
+    unsafe {
+        println!(
+            "Xmm0={:016x}{:016x}  Xmm1={:016x}{:016x} \n\
+             Xmm2={:016x}{:016x}  Xmm3={:016x}{:016x} \n\
+             Xmm4={:016x}{:016x}  Xmm5={:016x}{:016x} \n\
+             Xmm6={:016x}{:016x}  Xmm7={:016x}{:016x} \n\
+             Xmm8={:016x}{:016x}  Xmm9={:016x}{:016x} \n\
+             Xmm10={:016x}{:016x} Xmm11={:016x}{:016x} \n\
+             Xmm12={:016x}{:016x} Xmm13={:016x}{:016x} \n\
+             Xmm14={:016x}{:016x} Xmm15={:016x}{:016x} \n\
+             Mmx0={:016x} Mmx1={:016x} Mmx2={:016x} \n\
+             Mmx3={:016x} Mmx4={:016x} Mmx5={:016x} \n\
+             Mmx6={:016x} Mmx7={:016x} \n\
+             Csr={:016x} XCsr={:016x}",
+            reg_values[0].Fp.AsUINT128.High64,
+            reg_values[0].Fp.AsUINT128.Low64,
+            reg_values[1].Fp.AsUINT128.High64,
+            reg_values[1].Fp.AsUINT128.Low64,
+            reg_values[2].Fp.AsUINT128.High64,
+            reg_values[2].Fp.AsUINT128.Low64,
+            reg_values[3].Fp.AsUINT128.High64,
+            reg_values[3].Fp.AsUINT128.Low64,
+            reg_values[4].Fp.AsUINT128.High64,
+            reg_values[4].Fp.AsUINT128.Low64,
+            reg_values[5].Fp.AsUINT128.High64,
+            reg_values[5].Fp.AsUINT128.Low64,
+            reg_values[6].Fp.AsUINT128.High64,
+            reg_values[6].Fp.AsUINT128.Low64,
+            reg_values[7].Fp.AsUINT128.High64,
+            reg_values[7].Fp.AsUINT128.Low64,
+            reg_values[8].Fp.AsUINT128.High64,
+            reg_values[8].Fp.AsUINT128.Low64,
+            reg_values[9].Fp.AsUINT128.High64,
+            reg_values[9].Fp.AsUINT128.Low64,
+            reg_values[10].Fp.AsUINT128.High64,
+            reg_values[10].Fp.AsUINT128.Low64,
+            reg_values[11].Fp.AsUINT128.High64,
+            reg_values[11].Fp.AsUINT128.Low64,
+            reg_values[12].Fp.AsUINT128.High64,
+            reg_values[12].Fp.AsUINT128.Low64,
+            reg_values[13].Fp.AsUINT128.High64,
+            reg_values[13].Fp.AsUINT128.Low64,
+            reg_values[14].Fp.AsUINT128.High64,
+            reg_values[14].Fp.AsUINT128.Low64,
+            reg_values[15].Fp.AsUINT128.High64,
+            reg_values[15].Fp.AsUINT128.Low64,
+            reg_values[16].Reg64,
+            reg_values[17].Reg64,
+            reg_values[18].Reg64,
+            reg_values[19].Reg64,
+            reg_values[20].Reg64,
+            reg_values[21].Reg64,
+            reg_values[22].Reg64,
+            reg_values[23].Reg64,
+            reg_values[24].Reg64,
+            reg_values[25].Reg64,
         );
     }
 }
