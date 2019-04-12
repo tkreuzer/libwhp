@@ -208,27 +208,40 @@ pub fn dump_gp_regs(vp: &VirtualProcessor) {
 pub fn dump_segment_regs(vp: &VirtualProcessor) {
     const NUM_REGS: usize = 8;
     let reg_names: [WHV_REGISTER_NAME; NUM_REGS] = [
-        WHV_REGISTER_NAME::WHvX64RegisterEs,
         WHV_REGISTER_NAME::WHvX64RegisterCs,
         WHV_REGISTER_NAME::WHvX64RegisterSs,
         WHV_REGISTER_NAME::WHvX64RegisterDs,
+        WHV_REGISTER_NAME::WHvX64RegisterEs,
         WHV_REGISTER_NAME::WHvX64RegisterFs,
         WHV_REGISTER_NAME::WHvX64RegisterGs,
-        WHV_REGISTER_NAME::WHvX64RegisterLdtr,
         WHV_REGISTER_NAME::WHvX64RegisterTr,
+        WHV_REGISTER_NAME::WHvX64RegisterLdtr,
     ];
     let mut reg_values: [WHV_REGISTER_VALUE; NUM_REGS] = Default::default();
 
     // Get the registers as a baseline
     vp.get_registers(&reg_names, &mut reg_values).unwrap();
 
-    let mut idx = 0;
     println!("Segment regs:");
-    for v in reg_names.iter() {
-        unsafe {
-            println!("{:?} = {}", v, reg_values[idx].Segment);
-        }
-        idx += 1;
+    unsafe {
+        println!(
+            "  Cs: {:?}\n\
+             \x20 Ss: {:?}\n\
+             \x20 Ds: {:?}\n\
+             \x20 Es: {:?}\n\
+             \x20 Fs: {:?}\n\
+             \x20 Gs: {:?}\n\
+             \x20 Tr: {:?}\n\
+             \x20 Ldtr: {:?}",
+            reg_values[0].Segment,
+            reg_values[1].Segment,
+            reg_values[2].Segment,
+            reg_values[3].Segment,
+            reg_values[4].Segment,
+            reg_values[5].Segment,
+            reg_values[6].Segment,
+            reg_values[7].Segment,
+        );
     }
     println!("");
 }
