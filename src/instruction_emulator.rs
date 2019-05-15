@@ -159,7 +159,7 @@ impl<T: EmulatorCallbacks> Emulator<T> {
     }
 
     pub fn try_io_emulation(
-        &mut self,
+        &self,
         context: &mut T,
         vp_context: &WHV_VP_EXIT_CONTEXT,
         io_instruction_context: &WHV_X64_IO_PORT_ACCESS_CONTEXT,
@@ -183,7 +183,7 @@ impl<T: EmulatorCallbacks> Emulator<T> {
     }
 
     pub fn try_mmio_emulation<'a>(
-        &mut self,
+        &self,
         context: &'a mut T,
         vp_context: &WHV_VP_EXIT_CONTEXT,
         mmio_instruction_context: &WHV_MEMORY_ACCESS_CONTEXT,
